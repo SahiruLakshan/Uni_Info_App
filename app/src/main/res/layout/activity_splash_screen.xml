@@ -1,0 +1,23 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#003366"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="16dp">
+
+    <ImageView
+        android:id="@+id/splash_logo"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:src="@drawable/logo"
+        android:contentDescription="App Logo" />
+
+    <ImageView
+        android:id="@+id/splash_text"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:src="@drawable/uni_info"
+        android:contentDescription="App Title" />
+</LinearLayout>

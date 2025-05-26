@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <TextView android:id="@+id/textView" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="android:layout_width=&quot;match_parent&quot;&#xA;                android:layout_height=&quot;wrap_content&quot;&#xA;                android:orientation=&quot;vertical&quot;&#xA;                android:padding=&quot;24dp&quot;&#xA;                android:background=&quot;@drawable/dev_card_gradient&quot;>" />
+</selector>
