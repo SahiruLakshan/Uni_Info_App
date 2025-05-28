@@ -1,80 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- dialog_edit_details.xml -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="24dp"
-    >
+    android:padding="24dp">
 
+    <!-- Dialog Header -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_gravity="center_horizontal"
         android:layout_marginBottom="24dp"
-        android:text="Edit Profile"
+        android:text="Edit Your Details"
         android:textColor="#333333"
         android:textSize="20sp"
         android:textStyle="bold" />
 
+    <!-- Username Input -->
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        android:hint="Username"
+        app:boxBackgroundMode="outline"
+        app:boxCornerRadiusBottomEnd="8dp"
+        app:boxCornerRadiusBottomStart="8dp"
+        app:boxCornerRadiusTopEnd="8dp"
+        app:boxCornerRadiusTopStart="8dp">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etEditUsername"
+            android:id="@+id/etDialogUsername"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Username"
-            android:inputType="text" />
+            android:text="Lakshan"
+            android:inputType="text"
+            android:textColor="#333333"
+            android:textSize="16sp" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
+    <!-- Email Input -->
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        android:hint="Email"
+        app:boxBackgroundMode="outline"
+        app:boxCornerRadiusBottomEnd="8dp"
+        app:boxCornerRadiusBottomStart="8dp"
+        app:boxCornerRadiusTopEnd="8dp"
+        app:boxCornerRadiusTopStart="8dp">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etEditEmail"
+            android:id="@+id/etDialogEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Email"
-            android:inputType="textEmailAddress" />
+            android:text="lakshan@gmail.com"
+            android:inputType="textEmailAddress"
+            android:textColor="#333333"
+            android:textSize="16sp" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        app:passwordToggleEnabled="true">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etEditPassword"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="New Password"
-            android:inputType="textPassword" />
-
-    </com.google.android.material.textfield.TextInputLayout>
-
+    <!-- Password Input -->
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:hint="Password"
+        app:boxBackgroundMode="outline"
+        app:boxCornerRadiusBottomEnd="8dp"
+        app:boxCornerRadiusBottomStart="8dp"
+        app:boxCornerRadiusTopEnd="8dp"
+        app:boxCornerRadiusTopStart="8dp"
         app:passwordToggleEnabled="true">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etEditConfirmPassword"
+            android:id="@+id/etDialogPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Confirm Password"
-            android:inputType="textPassword" />
+            android:text="**********"
+            android:inputType="textPassword"
+            android:textColor="#333333"
+            android:textSize="16sp" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -84,27 +94,32 @@
         android:orientation="horizontal"
         android:gravity="center">
 
+        <!-- Save Button -->
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btnCancel"
+            android:id="@+id/btnDialogSave"
             android:layout_width="0dp"
             android:layout_height="48dp"
             android:layout_weight="1"
             android:layout_marginEnd="8dp"
-            android:background="@drawable/btn_red_bg"
-            android:text="Cancel"
-            android:textColor="#333333"
-            android:textSize="14sp"
+            android:background="@drawable/btn_blue_bg"
+            android:text="Save"
+            android:textColor="#ffffff"
+            android:textSize="16sp"
+            android:textStyle="bold"
             android:textAllCaps="false" />
 
+        <!-- Close Button -->
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btnUpdate"
+            android:id="@+id/btnDialogClose"
             android:layout_width="0dp"
             android:layout_height="48dp"
             android:layout_weight="1"
             android:layout_marginStart="8dp"
-            android:text="Update"
+            android:background="@drawable/btn_black_bg"
+            android:text="Close"
             android:textColor="#ffffff"
-            android:textSize="14sp"
+            android:textSize="16sp"
+            android:textStyle="bold"
             android:textAllCaps="false" />
 
     </LinearLayout>

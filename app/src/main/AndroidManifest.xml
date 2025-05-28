@@ -12,7 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.UniInfoApp"
-        tools:targetApi="31">
+        tools:targetApi="31"
+        >
 
         <!-- SplashActivity is now the launcher -->
         <activity
@@ -27,7 +28,9 @@
 
         <!-- Other activities -->
         <activity android:name=".SignInActivity" />
+        <activity android:name=".SignUpActivity" />
         <activity android:name=".NewsActivity" />
+        <activity android:name=".UserInfoActivity" />
 
     </application>
 
