@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.app.ProgressDialog;
@@ -34,6 +35,7 @@ public class UserInfoActivity extends AppCompatActivity {
     private AppCompatButton btnEditInfo;
     private AppCompatButton btnSignOut;
     private TextView tvUsername, tvEmail, tvUserID;
+    private ImageView ivBack;
     private TextView tvDeleteProfile; // New delete profile link
 
     // Firebase
@@ -75,6 +77,7 @@ public class UserInfoActivity extends AppCompatActivity {
     }
 
     private void initViews() {
+        ivBack = findViewById(R.id.ivBack);
         btnEditInfo = findViewById(R.id.btnEditInfo);
         btnSignOut = findViewById(R.id.btnSignOut);
         tvDeleteProfile = findViewById(R.id.tvDeleteProfile); // Initialize delete profile link
@@ -153,6 +156,14 @@ public class UserInfoActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 showDeleteProfileConfirmation();
+            }
+        });
+
+        ivBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(UserInfoActivity.this, NewsActivity.class);
+                startActivity(intent);
             }
         });
     }

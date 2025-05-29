@@ -204,6 +204,7 @@
                             android:textSize="14sp" />
 
                         <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/btnSeemore"
                             android:layout_width="120dp"
                             android:layout_height="40dp"
                             android:layout_gravity="center"
@@ -221,7 +222,112 @@
 
             </androidx.cardview.widget.CardView>
 
-            <!-- Academic News Card -->
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp"
+                android:background="#ffffff">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <!-- News Header -->
+
+                    <!-- News Image -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="16dp">
+
+                        <ImageView
+                            android:layout_width="40dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/hut" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:layout_weight="1"
+                            android:text="Event News"
+                            android:textColor="#333333"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:background="?android:attr/selectableItemBackgroundBorderless"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:src="@drawable/more" />
+
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/event_news"
+                        android:background="#4ade80" />
+
+                    <!-- News Content -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:text="University of Colombo Convocation - 2024"
+                            android:textColor="#333333"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="12dp"
+                            android:text="Published on 20th of April 2025"
+                            android:textColor="#666666"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="16dp"
+                            android:text="University of Colombo 2024 Convocation will be held on 6th and 7th of May at BMICH"
+                            android:textColor="#666666"
+                            android:textSize="14sp" />
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:layout_width="120dp"
+                            android:layout_height="40dp"
+                            android:layout_gravity="center"
+                            android:background="@drawable/news_seemore_button"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:text="See More"
+                            android:textAllCaps="false"
+                            android:textColor="#ffffff"
+                            android:textSize="12sp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
             <androidx.cardview.widget.CardView
                 xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -248,7 +354,7 @@
                         <ImageView
                             android:layout_width="40dp"
                             android:layout_height="24dp"
-                            android:src="@drawable/black_academic_cap"
+                            android:src="@drawable/sport_ic"
                             />
 
                         <TextView
@@ -256,7 +362,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:layout_marginStart="12dp"
-                            android:text="Academic News"
+                            android:text="Sport News"
                             android:textColor="#333333"
                             android:textSize="16sp"
                             android:textStyle="bold" />
@@ -276,7 +382,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="200dp"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/ac_news"
+                        android:src="@drawable/sport_news"
                         android:background="#4ade80" />
 
                     <!-- News Content -->
@@ -290,7 +396,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="8dp"
-                            android:text="First Year - First Semester Exam Registration is open now.."
+                            android:text="University of Colombo Inter-Faculty Championshp 2025"
                             android:textColor="#333333"
                             android:textSize="18sp"
                             android:textStyle="bold" />
@@ -299,7 +405,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="12dp"
-                            android:text="Published on 25th of April 2025"
+                            android:text="Published on 18th of April 2025"
                             android:textColor="#666666"
                             android:textSize="12sp" />
 
@@ -307,7 +413,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="16dp"
-                            android:text="Exam Registration is available from 25th of April 2025 to 01st of May 2025. Log into SIS and Check Exam Registration Section.."
+                            android:text="The Inter-Faculty Championship's volleyball games will be played today.."
                             android:textColor="#666666"
                             android:textSize="14sp" />
 
