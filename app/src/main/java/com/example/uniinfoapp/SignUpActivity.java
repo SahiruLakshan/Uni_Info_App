@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
+import android.app.ProgressDialog;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -45,6 +46,8 @@ public class SignUpActivity extends AppCompatActivity {
 
     // Loading dialog
     private AlertDialog loadingDialog;
+
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -263,49 +266,12 @@ public class SignUpActivity extends AppCompatActivity {
                         navigateToNewsActivity();
                     }
                 });
-
-        // Alternative method: Let Firestore auto-generate document ID
-        // Uncomment this if you prefer auto-generated IDs
-        /*
-        db.collection("users")
-                .add(userData)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        hideLoadingDialog();
-                        Log.d(TAG, "User data saved with auto-generated ID: " + documentReference.getId());
-                        showSuccessDialog(username);
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        hideLoadingDialog();
-                        Log.w(TAG, "Error saving user data", e);
-                        Toast.makeText(SignUpActivity.this,
-                                "Registration completed but failed to save user data: " + e.getMessage(),
-                                Toast.LENGTH_LONG).show();
-                        navigateToNewsActivity();
-                    }
-                });
-        */
     }
 
     private void showLoadingDialog() {
-        try {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_loading, null);
-            builder.setView(dialogView);
-            builder.setCancelable(false);
-
-            loadingDialog = builder.create();
-            if (loadingDialog.getWindow() != null) {
-                loadingDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            }
-            loadingDialog.show();
-        } catch (Exception e) {
-            Log.e(TAG, "Error showing loading dialog", e);
-        }
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Registering...");
+        progressDialog.show();
     }
 
     private void hideLoadingDialog() {

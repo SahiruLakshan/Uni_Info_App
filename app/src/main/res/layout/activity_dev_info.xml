@@ -35,7 +35,7 @@
             <ImageView
                 android:layout_width="32dp"
                 android:layout_height="32dp"
-                android:src="@drawable/logo" />
+                android:src="@drawable/app_logo" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -156,16 +156,19 @@
     <!-- Footer -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="100dp"
         android:background="#003366"
-        android:gravity="center">
+        android:gravity="center"
+        android:paddingVertical="16dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Trusted News for You..."
-            android:textColor="#ffffff"
-            android:textSize="16sp" />
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:fontFamily="serif" />
 
     </LinearLayout>
 

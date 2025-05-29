@@ -34,6 +34,7 @@ public class UserInfoActivity extends AppCompatActivity {
     private AppCompatButton btnEditInfo;
     private AppCompatButton btnSignOut;
     private TextView tvUsername, tvEmail, tvUserID;
+    private TextView tvDeleteProfile; // New delete profile link
 
     // Firebase
     private FirebaseAuth mAuth;
@@ -76,6 +77,7 @@ public class UserInfoActivity extends AppCompatActivity {
     private void initViews() {
         btnEditInfo = findViewById(R.id.btnEditInfo);
         btnSignOut = findViewById(R.id.btnSignOut);
+        tvDeleteProfile = findViewById(R.id.tvDeleteProfile); // Initialize delete profile link
 
         // Initialize TextViews for displaying user info
         tvUsername = findViewById(R.id.tvUsername);
@@ -143,6 +145,120 @@ public class UserInfoActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 signOutUser();
+            }
+        });
+
+        // Delete Profile link click listener
+        tvDeleteProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDeleteProfileConfirmation();
+            }
+        });
+    }
+
+    private void showDeleteProfileConfirmation() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Delete Profile");
+        builder.setMessage("Are you sure you want to delete your profile? This action cannot be undone and all your data will be permanently removed.");
+        builder.setIcon(android.R.drawable.ic_dialog_alert);
+
+        builder.setPositiveButton("DELETE", (dialog, which) -> {
+            showPasswordConfirmationForDelete();
+        });
+
+        builder.setNegativeButton("CANCEL", (dialog, which) -> {
+            dialog.dismiss();
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+        // Make the delete button red
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(android.R.color.holo_red_dark));
+    }
+
+    private void showPasswordConfirmationForDelete() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        // Create custom view for password input
+        View dialogView = LayoutInflater.from(this).inflate(android.R.layout.select_dialog_item, null);
+
+        // Create a simple EditText for password
+        final android.widget.EditText passwordInput = new android.widget.EditText(this);
+        passwordInput.setHint("Enter your password to confirm");
+        passwordInput.setInputType(android.text.InputType.TYPE_CLASS_TEXT | android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        passwordInput.setPadding(50, 30, 50, 30);
+
+        builder.setTitle("Confirm Password");
+        builder.setMessage("Please enter your current password to delete your profile:");
+        builder.setView(passwordInput);
+
+        builder.setPositiveButton("CONFIRM DELETE", (dialog, which) -> {
+            String password = passwordInput.getText().toString().trim();
+            if (password.isEmpty()) {
+                Toast.makeText(this, "Password is required", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            deleteUserProfile(password);
+        });
+
+        builder.setNegativeButton("CANCEL", (dialog, which) -> {
+            dialog.dismiss();
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+        // Make the confirm delete button red
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(android.R.color.holo_red_dark));
+    }
+
+    private void deleteUserProfile(String password) {
+        progressDialog.setMessage("Deleting profile...");
+        progressDialog.show();
+
+        String email = currentUser.getEmail();
+
+        // Re-authenticate user before deletion
+        AuthCredential credential = EmailAuthProvider.getCredential(email, password);
+
+        currentUser.reauthenticate(credential).addOnCompleteListener(reauthTask -> {
+            if (reauthTask.isSuccessful()) {
+                // First delete Firestore document
+                db.collection("users").document(currentUserId)
+                        .delete()
+                        .addOnCompleteListener(firestoreTask -> {
+                            if (firestoreTask.isSuccessful()) {
+                                // Then delete Firebase Auth user
+                                currentUser.delete().addOnCompleteListener(deleteTask -> {
+                                    progressDialog.dismiss();
+
+                                    if (deleteTask.isSuccessful()) {
+                                        Toast.makeText(UserInfoActivity.this, "Profile deleted successfully", Toast.LENGTH_LONG).show();
+
+                                        // Navigate to SignIn activity
+                                        Intent intent = new Intent(UserInfoActivity.this, SignInActivity.class);
+                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        startActivity(intent);
+                                        finish();
+
+                                        Log.d("UserInfoActivity", "User profile deleted successfully");
+                                    } else {
+                                        Toast.makeText(UserInfoActivity.this, "Failed to delete profile: " + deleteTask.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                        Log.e("UserInfoActivity", "Failed to delete Firebase Auth user", deleteTask.getException());
+                                    }
+                                });
+                            } else {
+                                progressDialog.dismiss();
+                                Toast.makeText(UserInfoActivity.this, "Failed to delete user data: " + firestoreTask.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                Log.e("UserInfoActivity", "Failed to delete Firestore document", firestoreTask.getException());
+                            }
+                        });
+            } else {
+                progressDialog.dismiss();
+                Toast.makeText(UserInfoActivity.this, "Authentication failed. Please check your password.", Toast.LENGTH_LONG).show();
+                Log.e("UserInfoActivity", "Re-authentication failed", reauthTask.getException());
             }
         });
     }

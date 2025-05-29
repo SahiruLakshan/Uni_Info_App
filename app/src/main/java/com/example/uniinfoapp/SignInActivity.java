@@ -1,5 +1,6 @@
 package com.example.uniinfoapp;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -7,6 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -20,6 +22,7 @@ public class SignInActivity extends AppCompatActivity {
     TextView registerPrompt;
     FirebaseAuth mAuth;
     FirebaseFirestore db;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +46,9 @@ public class SignInActivity extends AppCompatActivity {
                 return;
             }
 
+            // Show progress dialog
+            showProgressDialog("Signing in...", "Please wait while we verify your credentials");
+
             // Log the login attempt
             Log.d("SignInActivity", "Attempting login with email: " + email);
 
@@ -53,6 +59,9 @@ public class SignInActivity extends AppCompatActivity {
                         if (user != null) {
                             String uid = user.getUid();
                             Log.d("SignInActivity", "User UID: " + uid);
+
+                            // Update progress dialog message
+                            updateProgressDialog("Verifying account...");
 
                             db.collection("users").document(uid).get()
                                     .addOnSuccessListener(documentSnapshot -> {
@@ -65,23 +74,38 @@ public class SignInActivity extends AppCompatActivity {
                                                 // Update lastLoginAt timestamp
                                                 db.collection("users").document(uid)
                                                         .update("lastLoginAt", System.currentTimeMillis())
-                                                        .addOnSuccessListener(aVoid -> Log.d("SignInActivity", "Last login time updated"))
-                                                        .addOnFailureListener(e -> Log.e("SignInActivity", "Failed to update last login time", e));
+                                                        .addOnSuccessListener(aVoid -> {
+                                                            Log.d("SignInActivity", "Last login time updated");
 
-                                                Toast.makeText(this, "Login successful!", Toast.LENGTH_SHORT).show();
-                                                startActivity(new Intent(this, NewsActivity.class));
-                                                finish();
+                                                            // Hide progress dialog and navigate
+                                                            hideProgressDialog();
+                                                            Toast.makeText(this, "Login successful!", Toast.LENGTH_SHORT).show();
+                                                            startActivity(new Intent(this, NewsActivity.class));
+                                                            finish();
+                                                        })
+                                                        .addOnFailureListener(e -> {
+                                                            Log.e("SignInActivity", "Failed to update last login time", e);
+
+                                                            // Hide progress dialog and navigate anyway
+                                                            hideProgressDialog();
+                                                            Toast.makeText(this, "Login successful!", Toast.LENGTH_SHORT).show();
+                                                            startActivity(new Intent(this, NewsActivity.class));
+                                                            finish();
+                                                        });
                                             } else {
+                                                hideProgressDialog();
                                                 Toast.makeText(this, "Account is inactive. Please contact support.", Toast.LENGTH_LONG).show();
                                                 mAuth.signOut(); // Sign out if account is inactive
                                             }
                                         } else {
+                                            hideProgressDialog();
                                             Log.e("SignInActivity", "User document not found in Firestore");
                                             Toast.makeText(this, "User profile not found. Please contact support.", Toast.LENGTH_LONG).show();
                                             mAuth.signOut();
                                         }
                                     })
                                     .addOnFailureListener(e -> {
+                                        hideProgressDialog();
                                         Log.e("SignIn", "Firestore error", e);
                                         Toast.makeText(this, "Error accessing user data: " + e.getMessage(), Toast.LENGTH_LONG).show();
                                         mAuth.signOut();
@@ -89,6 +113,7 @@ public class SignInActivity extends AppCompatActivity {
                         }
                     })
                     .addOnFailureListener(e -> {
+                        hideProgressDialog();
                         Log.e("SignInActivity", "Firebase Auth failed", e);
                         String errorMessage = "Login failed: ";
 
@@ -118,6 +143,28 @@ public class SignInActivity extends AppCompatActivity {
         });
     }
 
+    private void showProgressDialog(String title, String message) {
+        if (progressDialog == null) {
+            progressDialog = new ProgressDialog(this);
+            progressDialog.setCancelable(false);
+        }
+        progressDialog.setTitle(title);
+        progressDialog.setMessage(message);
+        progressDialog.show();
+    }
+
+    private void updateProgressDialog(String message) {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.setMessage(message);
+        }
+    }
+
+    private void hideProgressDialog() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -125,9 +172,13 @@ public class SignInActivity extends AppCompatActivity {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
             Log.d("SignInActivity", "User already signed in: " + currentUser.getEmail());
-            // Optionally redirect to main activity if user is already logged in
-            // startActivity(new Intent(this, NewsActivity.class));
-            // finish();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // Clean up progress dialog
+        hideProgressDialog();
     }
 }
