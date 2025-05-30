@@ -12,13 +12,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.app.ProgressDialog;
-
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
@@ -26,7 +21,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,15 +30,11 @@ public class UserInfoActivity extends AppCompatActivity {
     private AppCompatButton btnSignOut;
     private TextView tvUsername, tvEmail, tvUserID;
     private ImageView ivBack;
-    private TextView tvDeleteProfile; // New delete profile link
-
-    // Firebase
+    private TextView tvDeleteProfile,tvDevInfo;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private FirebaseUser currentUser;
     private String currentUserId;
-
-    // Progress Dialog
     private ProgressDialog progressDialog;
 
     @Override
@@ -52,7 +42,6 @@ public class UserInfoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_info);
 
-        // Initialize Firebase
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
         currentUser = mAuth.getCurrentUser();
@@ -66,13 +55,10 @@ public class UserInfoActivity extends AppCompatActivity {
             return;
         }
 
-        // Initialize views
         initViews();
 
-        // Load user data
         loadUserData();
 
-        // Set click listeners
         setClickListeners();
     }
 
@@ -80,14 +66,12 @@ public class UserInfoActivity extends AppCompatActivity {
         ivBack = findViewById(R.id.ivBack);
         btnEditInfo = findViewById(R.id.btnEditInfo);
         btnSignOut = findViewById(R.id.btnSignOut);
-        tvDeleteProfile = findViewById(R.id.tvDeleteProfile); // Initialize delete profile link
-
-        // Initialize TextViews for displaying user info
+        tvDeleteProfile = findViewById(R.id.tvDeleteProfile);
         tvUsername = findViewById(R.id.tvUsername);
         tvEmail = findViewById(R.id.tvUserEmail);
-        tvUserID = findViewById(R.id.tvUserPassword); // Using password TextView to show ID
+        tvUserID = findViewById(R.id.tvUserPassword);
+        tvDevInfo = findViewById(R.id.tvDevInfo);
 
-        // Initialize Progress Dialog
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Loading...");
         progressDialog.setCancelable(false);
@@ -102,7 +86,6 @@ public class UserInfoActivity extends AppCompatActivity {
         progressDialog.setMessage("Loading user data...");
         progressDialog.show();
 
-        // Firestore query to get user document
         db.collection("users").document(currentUserId)
                 .get()
                 .addOnCompleteListener(task -> {
@@ -111,7 +94,6 @@ public class UserInfoActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         DocumentSnapshot document = task.getResult();
                         if (document.exists()) {
-                            // Get data from Firestore document
                             String username = document.getString("username");
                             String email = document.getString("email");
 
@@ -121,7 +103,7 @@ public class UserInfoActivity extends AppCompatActivity {
 
                             Log.d("UserInfoActivity", "User data loaded successfully");
                         } else {
-                            // Document doesn't exist
+
                             tvEmail.setText("Email: " + currentUser.getEmail());
                             tvUsername.setText("Username: Not set");
                             tvUserID.setText("User ID: " + currentUserId);
@@ -135,7 +117,6 @@ public class UserInfoActivity extends AppCompatActivity {
     }
 
     private void setClickListeners() {
-        // Edit Info button click listener
         btnEditInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -143,7 +124,6 @@ public class UserInfoActivity extends AppCompatActivity {
             }
         });
 
-        // Sign Out button click listener
         btnSignOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -151,7 +131,6 @@ public class UserInfoActivity extends AppCompatActivity {
             }
         });
 
-        // Delete Profile link click listener
         tvDeleteProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -163,6 +142,14 @@ public class UserInfoActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(UserInfoActivity.this, NewsActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        tvDevInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(UserInfoActivity.this, DevActivity.class);
                 startActivity(intent);
             }
         });
@@ -185,17 +172,14 @@ public class UserInfoActivity extends AppCompatActivity {
         AlertDialog dialog = builder.create();
         dialog.show();
 
-        // Make the delete button red
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(android.R.color.holo_red_dark));
     }
 
     private void showPasswordConfirmationForDelete() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        // Create custom view for password input
         View dialogView = LayoutInflater.from(this).inflate(android.R.layout.select_dialog_item, null);
 
-        // Create a simple EditText for password
         final android.widget.EditText passwordInput = new android.widget.EditText(this);
         passwordInput.setHint("Enter your password to confirm");
         passwordInput.setInputType(android.text.InputType.TYPE_CLASS_TEXT | android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD);
@@ -221,7 +205,6 @@ public class UserInfoActivity extends AppCompatActivity {
         AlertDialog dialog = builder.create();
         dialog.show();
 
-        // Make the confirm delete button red
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(android.R.color.holo_red_dark));
     }
 
@@ -231,24 +214,20 @@ public class UserInfoActivity extends AppCompatActivity {
 
         String email = currentUser.getEmail();
 
-        // Re-authenticate user before deletion
         AuthCredential credential = EmailAuthProvider.getCredential(email, password);
 
         currentUser.reauthenticate(credential).addOnCompleteListener(reauthTask -> {
             if (reauthTask.isSuccessful()) {
-                // First delete Firestore document
                 db.collection("users").document(currentUserId)
                         .delete()
                         .addOnCompleteListener(firestoreTask -> {
                             if (firestoreTask.isSuccessful()) {
-                                // Then delete Firebase Auth user
                                 currentUser.delete().addOnCompleteListener(deleteTask -> {
                                     progressDialog.dismiss();
 
                                     if (deleteTask.isSuccessful()) {
                                         Toast.makeText(UserInfoActivity.this, "Profile deleted successfully", Toast.LENGTH_LONG).show();
 
-                                        // Navigate to SignIn activity
                                         Intent intent = new Intent(UserInfoActivity.this, SignInActivity.class);
                                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                         startActivity(intent);
@@ -275,28 +254,22 @@ public class UserInfoActivity extends AppCompatActivity {
     }
 
     private void showEditDetailsDialog() {
-        // Create AlertDialog Builder
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        // Inflate the dialog layout - Make sure to use the correct layout name
         View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_edit_profile, null);
         builder.setView(dialogView);
 
-        // Create and configure the dialog
         AlertDialog dialog = builder.create();
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-        // Get references to dialog views
         TextInputEditText etUsername = dialogView.findViewById(R.id.etDialogUsername);
         TextInputEditText etEmail = dialogView.findViewById(R.id.etDialogEmail);
         TextInputEditText etPassword = dialogView.findViewById(R.id.etDialogPassword);
         AppCompatButton btnSave = dialogView.findViewById(R.id.btnDialogSave);
         AppCompatButton btnClose = dialogView.findViewById(R.id.btnDialogClose);
 
-        // Load current user data into dialog (including password)
         loadCurrentUserDataIntoDialog(etUsername, etEmail, etPassword);
 
-        // Save button click listener
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -304,7 +277,6 @@ public class UserInfoActivity extends AppCompatActivity {
                 String email = etEmail.getText().toString().trim();
                 String password = etPassword.getText().toString().trim();
 
-                // Validation
                 if (username.isEmpty()) {
                     etUsername.setError("Username is required");
                     return;
@@ -330,12 +302,10 @@ public class UserInfoActivity extends AppCompatActivity {
                     return;
                 }
 
-                // Update user info
                 updateUserInfo(username, email, password, dialog);
             }
         });
 
-        // Close button click listener
         btnClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -343,17 +313,14 @@ public class UserInfoActivity extends AppCompatActivity {
             }
         });
 
-        // Show the dialog
         dialog.show();
     }
 
     private void loadCurrentUserDataIntoDialog(TextInputEditText etUsername, TextInputEditText etEmail, TextInputEditText etPassword) {
         if (currentUser == null) return;
 
-        // Set current email from Firebase Auth
         etEmail.setText(currentUser.getEmail());
 
-        // Load username and password from Firestore
         db.collection("users").document(currentUserId)
                 .get()
                 .addOnCompleteListener(task -> {
@@ -378,7 +345,6 @@ public class UserInfoActivity extends AppCompatActivity {
                 });
     }
 
-    // UPDATED METHOD - This replaces your existing updateUserInfo method
     private void updateUserInfo(String username, String email, String password, AlertDialog dialog) {
         progressDialog.setMessage("Updating profile...");
         progressDialog.show();
@@ -386,7 +352,6 @@ public class UserInfoActivity extends AppCompatActivity {
         String currentEmail = currentUser.getEmail();
         boolean emailChanged = !email.equals(currentEmail);
 
-        // First, get the current password from Firestore for re-authentication
         db.collection("users").document(currentUserId)
                 .get()
                 .addOnCompleteListener(task -> {
@@ -396,7 +361,6 @@ public class UserInfoActivity extends AppCompatActivity {
                             String currentStoredPassword = document.getString("password");
 
                             if (currentStoredPassword != null) {
-                                // Now proceed with updates
                                 performUserUpdates(username, email, password, currentStoredPassword, emailChanged, dialog);
                             } else {
                                 progressDialog.dismiss();
@@ -413,9 +377,7 @@ public class UserInfoActivity extends AppCompatActivity {
                 });
     }
 
-    // UPDATED METHOD - This replaces your existing performUserUpdates method
     private void performUserUpdates(String username, String email, String newPassword, String currentPassword, boolean emailChanged, AlertDialog dialog) {
-        // Create user data map for Firestore
         Map<String, Object> userUpdates = new HashMap<>();
         userUpdates.put("username", username);
         userUpdates.put("email", email);
@@ -423,13 +385,11 @@ public class UserInfoActivity extends AppCompatActivity {
         userUpdates.put("lastUpdated", System.currentTimeMillis());
 
         if (emailChanged) {
-            // Need to re-authenticate for email change
             String currentEmail = currentUser.getEmail();
             AuthCredential credential = EmailAuthProvider.getCredential(currentEmail, currentPassword);
 
             currentUser.reauthenticate(credential).addOnCompleteListener(reauthTask -> {
                 if (reauthTask.isSuccessful()) {
-                    // Update email first, then password, then Firestore
                     currentUser.updateEmail(email).addOnCompleteListener(emailTask -> {
                         if (emailTask.isSuccessful()) {
                             updatePasswordAndFirestore(newPassword, userUpdates, dialog);
@@ -444,7 +404,6 @@ public class UserInfoActivity extends AppCompatActivity {
                 }
             });
         } else {
-            // Only password/username change - still need to re-authenticate for password change
             String currentEmail = currentUser.getEmail();
             AuthCredential credential = EmailAuthProvider.getCredential(currentEmail, currentPassword);
 
@@ -459,12 +418,9 @@ public class UserInfoActivity extends AppCompatActivity {
         }
     }
 
-    // UPDATED METHOD - This replaces your existing updatePasswordAndFirestore method
     private void updatePasswordAndFirestore(String newPassword, Map<String, Object> userUpdates, AlertDialog dialog) {
-        // Update password in Firebase Auth
         currentUser.updatePassword(newPassword).addOnCompleteListener(passwordTask -> {
             if (passwordTask.isSuccessful()) {
-                // Now update Firestore
                 db.collection("users").document(currentUserId)
                         .update(userUpdates)
                         .addOnCompleteListener(firestoreTask -> {
@@ -494,7 +450,6 @@ public class UserInfoActivity extends AppCompatActivity {
             mAuth.signOut();
             Toast.makeText(UserInfoActivity.this, "Signed out successfully", Toast.LENGTH_SHORT).show();
 
-            // Navigate to SignIn activity
             Intent intent = new Intent(UserInfoActivity.this, SignInActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);

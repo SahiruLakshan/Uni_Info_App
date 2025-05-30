@@ -8,12 +8,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.DocumentSnapshot;
 
 public class SignInActivity extends AppCompatActivity {
 
@@ -46,10 +44,8 @@ public class SignInActivity extends AppCompatActivity {
                 return;
             }
 
-            // Show progress dialog
             showProgressDialog("Signing in...", "Please wait while we verify your credentials");
 
-            // Log the login attempt
             Log.d("SignInActivity", "Attempting login with email: " + email);
 
             mAuth.signInWithEmailAndPassword(email, password)
@@ -60,7 +56,6 @@ public class SignInActivity extends AppCompatActivity {
                             String uid = user.getUid();
                             Log.d("SignInActivity", "User UID: " + uid);
 
-                            // Update progress dialog message
                             updateProgressDialog("Verifying account...");
 
                             db.collection("users").document(uid).get()
@@ -71,13 +66,11 @@ public class SignInActivity extends AppCompatActivity {
                                             Log.d("SignInActivity", "User isActive: " + isActive);
 
                                             if (isActive != null && isActive) {
-                                                // Update lastLoginAt timestamp
                                                 db.collection("users").document(uid)
                                                         .update("lastLoginAt", System.currentTimeMillis())
                                                         .addOnSuccessListener(aVoid -> {
                                                             Log.d("SignInActivity", "Last login time updated");
 
-                                                            // Hide progress dialog and navigate
                                                             hideProgressDialog();
                                                             Toast.makeText(this, "Login successful!", Toast.LENGTH_SHORT).show();
                                                             startActivity(new Intent(this, NewsActivity.class));
@@ -86,7 +79,6 @@ public class SignInActivity extends AppCompatActivity {
                                                         .addOnFailureListener(e -> {
                                                             Log.e("SignInActivity", "Failed to update last login time", e);
 
-                                                            // Hide progress dialog and navigate anyway
                                                             hideProgressDialog();
                                                             Toast.makeText(this, "Login successful!", Toast.LENGTH_SHORT).show();
                                                             startActivity(new Intent(this, NewsActivity.class));
@@ -117,7 +109,6 @@ public class SignInActivity extends AppCompatActivity {
                         Log.e("SignInActivity", "Firebase Auth failed", e);
                         String errorMessage = "Login failed: ";
 
-                        // Provide more specific error messages
                         if (e.getMessage() != null) {
                             if (e.getMessage().contains("password is invalid")) {
                                 errorMessage += "Incorrect password. Please try again.";
@@ -168,7 +159,6 @@ public class SignInActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        // Check if user is already signed in
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
             Log.d("SignInActivity", "User already signed in: " + currentUser.getEmail());
@@ -178,7 +168,6 @@ public class SignInActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // Clean up progress dialog
         hideProgressDialog();
     }
 }

@@ -31,6 +31,7 @@
         <activity android:name=".SignUpActivity" />
         <activity android:name=".NewsActivity" />
         <activity android:name=".UserInfoActivity" />
+        <activity android:name=".DevActivity" />
 
     </application>
 

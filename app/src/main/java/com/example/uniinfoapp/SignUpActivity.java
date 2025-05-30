@@ -35,16 +35,12 @@ public class SignUpActivity extends AppCompatActivity {
 
     private static final String TAG = "SignUpActivity";
 
-    // UI Components
     private TextInputEditText etUsername, etEmail, etPassword, etConfirmPassword;
     private MaterialButton btnSignUp;
     private TextView tvLoginPrompt;
 
-    // Firebase
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
-
-    // Loading dialog
     private AlertDialog loadingDialog;
 
     private ProgressDialog progressDialog;
@@ -54,13 +50,10 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        // Initialize Firebase
         initializeFirebase();
 
-        // Initialize views
         initViews();
 
-        // Set click listeners
         setClickListeners();
     }
 
@@ -68,7 +61,6 @@ public class SignUpActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
-        // Enable Firestore offline persistence (optional)
         FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
                 .setPersistenceEnabled(true)
                 .build();
@@ -87,7 +79,6 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void setClickListeners() {
-        // Sign Up button
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -95,7 +86,6 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
 
-        // Login prompt
         tvLoginPrompt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -108,35 +98,29 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void handleSignUp() {
-        // Get input values
         String username = etUsername.getText().toString().trim();
         String email = etEmail.getText().toString().trim();
         String password = etPassword.getText().toString().trim();
         String confirmPassword = etConfirmPassword.getText().toString().trim();
 
-        // Validate inputs
         if (!validateInputs(username, email, password, confirmPassword)) {
             return;
         }
 
-        // Show loading dialog
         showLoadingDialog();
 
         Log.d(TAG, "Starting user registration process...");
 
-        // Create user with Firebase Auth
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Sign up success
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
 
                             if (user != null) {
                                 Log.d(TAG, "User created with UID: " + user.getUid());
-                                // Save additional user data to Firestore
                                 saveUserDataToFirestore(user.getUid(), username, email,password);
                             } else {
                                 hideLoadingDialog();
@@ -146,7 +130,6 @@ public class SignUpActivity extends AppCompatActivity {
                                         Toast.LENGTH_LONG).show();
                             }
                         } else {
-                            // Sign up failed
                             hideLoadingDialog();
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
 
@@ -164,7 +147,6 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private boolean validateInputs(String username, String email, String password, String confirmPassword) {
-        // Reset previous errors
         etUsername.setError(null);
         etEmail.setError(null);
         etPassword.setError(null);
@@ -172,7 +154,6 @@ public class SignUpActivity extends AppCompatActivity {
 
         boolean isValid = true;
 
-        // Username validation
         if (username.isEmpty()) {
             etUsername.setError("Username is required");
             etUsername.requestFocus();
@@ -187,7 +168,6 @@ public class SignUpActivity extends AppCompatActivity {
             isValid = false;
         }
 
-        // Email validation
         if (email.isEmpty()) {
             etEmail.setError("Email is required");
             if (isValid) etEmail.requestFocus();
@@ -198,7 +178,6 @@ public class SignUpActivity extends AppCompatActivity {
             isValid = false;
         }
 
-        // Password validation
         if (password.isEmpty()) {
             etPassword.setError("Password is required");
             if (isValid) etPassword.requestFocus();
@@ -209,7 +188,6 @@ public class SignUpActivity extends AppCompatActivity {
             isValid = false;
         }
 
-        // Confirm password validation
         if (confirmPassword.isEmpty()) {
             etConfirmPassword.setError("Please confirm your password");
             if (isValid) etConfirmPassword.requestFocus();
@@ -226,9 +204,8 @@ public class SignUpActivity extends AppCompatActivity {
     private void saveUserDataToFirestore(String userId, String username, String email,String password) {
         Log.d(TAG, "Saving user data to Firestore for UID: " + userId);
 
-        // Create user data map
         Map<String, Object> userData = new HashMap<>();
-        userData.put("uid", userId); // Store UID
+        userData.put("uid", userId);
         userData.put("username", username);
         userData.put("email", email);
         userData.put("password", password);
@@ -237,7 +214,6 @@ public class SignUpActivity extends AppCompatActivity {
         userData.put("profileComplete", false);
         userData.put("lastLoginAt", System.currentTimeMillis());
 
-        // Save to Firestore with specific document ID (user's UID)
         db.collection("users").document(userId)
                 .set(userData)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -247,7 +223,6 @@ public class SignUpActivity extends AppCompatActivity {
                         Log.d(TAG, "User data saved successfully to Firestore");
                         Log.d(TAG, "Document created at: users/" + userId);
 
-                        // Show success dialog
                         showSuccessDialog(username);
                     }
                 })
@@ -257,12 +232,10 @@ public class SignUpActivity extends AppCompatActivity {
                         hideLoadingDialog();
                         Log.w(TAG, "Error saving user data to Firestore", e);
 
-                        // Show error but still allow login since Firebase Auth succeeded
                         Toast.makeText(SignUpActivity.this,
                                 "Account created but failed to save profile data: " + e.getMessage(),
                                 Toast.LENGTH_LONG).show();
 
-                        // Still navigate to news activity since auth was successful
                         navigateToNewsActivity();
                     }
                 });
@@ -296,11 +269,9 @@ public class SignUpActivity extends AppCompatActivity {
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             }
 
-            // Set welcome message
             TextView tvWelcome = dialogView.findViewById(R.id.tv_welcome_message);
             tvWelcome.setText("Welcome " + username + "!\nRegistration successful!");
 
-            // OK button
             MaterialButton btnOK = dialogView.findViewById(R.id.btn_dialog_ok);
             btnOK.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -313,7 +284,6 @@ public class SignUpActivity extends AppCompatActivity {
             dialog.show();
         } catch (Exception e) {
             Log.e(TAG, "Error showing success dialog", e);
-            // Fallback: just navigate to news activity
             navigateToNewsActivity();
         }
     }

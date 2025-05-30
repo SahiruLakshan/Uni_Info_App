@@ -6,7 +6,6 @@
     android:padding="24dp"
     android:background="@drawable/dialog_bg">
 
-    <!-- Header Section -->
     <TextView
         android:id="@+id/tv_header_title"
         android:layout_width="match_parent"
@@ -18,7 +17,6 @@
         android:lineSpacingExtra="4dp"
         android:layout_marginBottom="16dp" />
 
-    <!-- Registration Period -->
     <TextView
         android:id="@+id/tv_registration_period"
         android:layout_width="match_parent"
@@ -28,7 +26,6 @@
         android:textColor="@android:color/black"
         android:layout_marginBottom="12dp" />
 
-    <!-- Instructions Title -->
     <TextView
         android:id="@+id/tv_instructions_title"
         android:layout_width="match_parent"
@@ -38,7 +35,6 @@
         android:textColor="@android:color/black"
         android:layout_marginBottom="8dp" />
 
-    <!-- Instructions List -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -46,7 +42,6 @@
         android:layout_marginStart="16dp"
         android:layout_marginBottom="24dp">
 
-        <!-- Step 1 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -71,7 +66,6 @@
 
         </LinearLayout>
 
-        <!-- Step 2 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -96,7 +90,6 @@
 
         </LinearLayout>
 
-        <!-- Step 3 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -121,7 +114,6 @@
 
         </LinearLayout>
 
-        <!-- Step 4 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -147,7 +139,6 @@
 
     </LinearLayout>
 
-    <!-- Close Button -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

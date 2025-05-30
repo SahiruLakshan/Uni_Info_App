@@ -22,10 +22,8 @@ public class NewsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news);
 
-        // Initialize views
         initViews();
 
-        // Set click listeners
         setClickListeners();
     }
 
@@ -36,7 +34,6 @@ public class NewsActivity extends AppCompatActivity {
     }
 
     private void setClickListeners() {
-        // Back arrow click listener - navigate to sign in page
         ivBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -45,7 +42,6 @@ public class NewsActivity extends AppCompatActivity {
             }
         });
 
-        // Profile icon click listener - navigate to user info page
         ivProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -54,7 +50,6 @@ public class NewsActivity extends AppCompatActivity {
             }
         });
 
-        // See More button click listener - show exam registration dialog
         btnSeemore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -64,13 +59,11 @@ public class NewsActivity extends AppCompatActivity {
     }
 
     private void showExamRegistrationDialog() {
-        // Create custom dialog
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.news_more);
         dialog.setCancelable(true);
 
-        // Make dialog background transparent and set proper size
         Window window = dialog.getWindow();
         if (window != null) {
             window.setBackgroundDrawableResource(android.R.color.transparent);
@@ -80,7 +73,6 @@ public class NewsActivity extends AppCompatActivity {
             );
         }
 
-        // Find and set up the close button
         try {
             TextView btnClose = dialog.findViewById(R.id.close);
             if (btnClose != null) {
@@ -95,7 +87,6 @@ public class NewsActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        // Show the dialog
         dialog.show();
     }
 }
