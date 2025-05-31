@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.view.Window;
 import android.widget.TextView;
+import android.widget.LinearLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
@@ -15,6 +16,7 @@ public class NewsActivity extends AppCompatActivity {
     private ImageView ivBack;
     private ImageView ivProfile;
     private AppCompatButton btnSeemore;
+    private LinearLayout academicBtn,eventBtn,sportBtn;
 
 
     @Override
@@ -31,6 +33,9 @@ public class NewsActivity extends AppCompatActivity {
         ivBack = findViewById(R.id.ivBack);
         ivProfile = findViewById(R.id.ivProfile);
         btnSeemore = findViewById(R.id.btnSeemore);
+        academicBtn = findViewById(R.id.academic_btn);
+        eventBtn = findViewById(R.id.event_btn);
+        sportBtn = findViewById(R.id.sport_btn);
     }
 
     private void setClickListeners() {
@@ -54,6 +59,30 @@ public class NewsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 showExamRegistrationDialog();
+            }
+        });
+
+        academicBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(NewsActivity.this, AcademicnewsActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        eventBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(NewsActivity.this, EventnewsActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        sportBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(NewsActivity.this, SportnewsActivity.class);
+                startActivity(intent);
             }
         });
     }

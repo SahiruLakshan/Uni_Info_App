@@ -32,7 +32,9 @@
         <activity android:name=".NewsActivity" />
         <activity android:name=".UserInfoActivity" />
         <activity android:name=".DevActivity" />
-
+        <activity android:name=".AcademicnewsActivity" />
+        <activity android:name=".SportnewsActivity" />
+        <activity android:name=".EventnewsActivity" />
     </application>
 
 </manifest>
