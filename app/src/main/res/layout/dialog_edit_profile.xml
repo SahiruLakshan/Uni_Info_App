@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- dialog_edit_details.xml -->
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:background="@drawable/dialog_bg"
     android:padding="24dp">
 
-    <!-- Dialog Header -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -18,7 +18,6 @@
         android:textSize="20sp"
         android:textStyle="bold" />
 
-    <!-- Username Input -->
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -41,7 +40,6 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Email Input -->
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -64,7 +62,6 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Password Input -->
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -94,7 +91,6 @@
         android:orientation="horizontal"
         android:gravity="center">
 
-        <!-- Save Button -->
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnDialogSave"
             android:layout_width="0dp"
@@ -108,7 +104,6 @@
             android:textStyle="bold"
             android:textAllCaps="false" />
 
-        <!-- Close Button -->
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnDialogClose"
             android:layout_width="0dp"

@@ -35,7 +35,7 @@
             <ImageView
                 android:layout_width="32dp"
                 android:layout_height="32dp"
-                android:src="@drawable/logo" />
+                android:src="@drawable/app_logo" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -64,6 +64,7 @@
         </LinearLayout>
 
         <ImageView
+            android:id="@+id/ivProfile"
             android:layout_width="36dp"
             android:layout_height="36dp"
             android:src="@drawable/ic_person"
@@ -100,9 +101,9 @@
         <androidx.cardview.widget.CardView
             xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:layout_width="match_parent"
+            android:layout_width="270dp"
             android:layout_height="wrap_content"
-            app:cardCornerRadius="12dp"
+            app:cardCornerRadius="20dp"
             app:cardElevation="4dp"
             android:layout_marginBottom="24dp">
 
@@ -150,22 +151,24 @@
             android:text="Release Version : Version 1.0"
             android:textColor="#000000"
             android:textSize="14sp" />
-
     </LinearLayout>
 
     <!-- Footer -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="100dp"
         android:background="#003366"
-        android:gravity="center">
+        android:gravity="center"
+        android:paddingVertical="16dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Trusted News for You..."
-            android:textColor="#ffffff"
-            android:textSize="16sp" />
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:fontFamily="serif" />
 
     </LinearLayout>
 
